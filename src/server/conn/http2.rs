@@ -257,6 +257,25 @@ impl<E> Builder<E> {
         self
     }
 
+    /// Sets the max payload size of received frames that are copied out of
+    /// the connection's read buffer.
+    ///
+    /// Received body chunks and header values are otherwise slices of the read
+    /// buffer, and keep the whole buffer alive while they are held. Copying
+    /// small frames can save a lot of memory when many streams hold a few
+    /// small frames each, for instance in a proxy relaying to slow readers.
+    ///
+    /// Default is 0, which never copies.
+    ///
+    /// See the documentation of [`h2::server::Builder::max_recv_copy_size`] for more
+    /// details.
+    ///
+    /// [`h2::server::Builder::max_recv_copy_size`]: https://docs.rs/h2/latest/h2/server/struct.Builder.html#method.max_recv_copy_size
+    pub fn max_recv_copy_size(&mut self, max: usize) -> &mut Self {
+        self.h2_builder.max_recv_copy_size = max;
+        self
+    }
+
     /// Enables the [extended CONNECT protocol].
     ///
     /// [extended CONNECT protocol]: https://datatracker.ietf.org/doc/html/rfc8441#section-4

@@ -53,6 +53,7 @@ pub(crate) struct Config {
     pub(crate) keep_alive_interval: Option<Duration>,
     pub(crate) keep_alive_timeout: Duration,
     pub(crate) max_send_buffer_size: usize,
+    pub(crate) max_recv_copy_size: usize,
     pub(crate) header_table_size: Option<u32>,
     pub(crate) max_header_list_size: u32,
     pub(crate) date_header: bool,
@@ -73,6 +74,7 @@ impl Default for Config {
             keep_alive_interval: None,
             keep_alive_timeout: Duration::from_secs(20),
             max_send_buffer_size: DEFAULT_MAX_SEND_BUF_SIZE,
+            max_recv_copy_size: 0,
             max_header_list_size: DEFAULT_SETTINGS_MAX_HEADER_LIST_SIZE,
             date_header: true,
         }
@@ -139,7 +141,8 @@ where
             .max_frame_size(config.max_frame_size)
             .max_header_list_size(config.max_header_list_size)
             .max_local_error_reset_streams(config.max_local_error_reset_streams)
-            .max_send_buffer_size(config.max_send_buffer_size);
+            .max_send_buffer_size(config.max_send_buffer_size)
+            .max_recv_copy_size(config.max_recv_copy_size);
         if let Some(max) = config.max_concurrent_streams {
             builder.max_concurrent_streams(max);
         }
